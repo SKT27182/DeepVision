@@ -1,15 +1,15 @@
 import tensorflow as tf
 import argparse
-from DeepVision.AlexNet.model import AlexNet
+from DeepVision.VGG.model import VGG
 from DeepVision.utils.data import Datasets
 from DeepVision.utils.helper import *
 
 
-def alexnet_preprocess(x):
+def vgg_preprocess(x):
 
     """
 
-    Add padding or cropping to the input tensor to make it of size input_shape (which is input shape for the LeNet models)
+    Add padding or cropping to the input tensor to make it of size output_shape (which is input shape for the LeNet models)
 
     preprocess the input tensor
 
@@ -17,19 +17,31 @@ def alexnet_preprocess(x):
 
     """
 
+
     x = tf.keras.layers.experimental.preprocessing.Resizing(
         224, 224
     )(x)
 
-    x = tf.keras.layers.experimental.preprocessing.Rescaling(1.0 / 255)(x)
+    x = tf.keras.layers.experimental.preprocessing.Rescaling(1.0 / 255.0)(x)
 
     return x
 
 
 # make an instance of the LeNet class
 def load_model(args):
-    if args.model == "AlexNet":
-        model = AlexNet(input_shape=args.input_shape, classes=args.output_shape).alexnet()
+    vgg_model = VGG(input_shape=args.input_shape, output_shape=args.output_shape)
+    if args.model == "VGG_A":
+        model = vgg_model.vgg_a()
+    elif args.model == "VGG_A_LRN":
+        model = vgg_model.vgg_a_lrn()
+    elif args.model == "VGG_B":
+        model = vgg_model.vgg_b()
+    elif args.model == "VGG_C":
+        model = vgg_model.vgg_c()
+    elif args.model == "VGG_D":
+        model = vgg_model.vgg_d()
+    elif args.model == "VGG_E":
+        model = vgg_model.vgg_e()
     return model
 
 
@@ -39,10 +51,10 @@ def main(args):
     # model_summary_only only
     if args.summary_only:
         model.summary()
-        return
 
     # if args.architecture:
     #     tf.keras.utils.plot_model(model, show_shapes=True, show_layer_activations=True)
+
 
     if args.train:
 
@@ -51,9 +63,8 @@ def main(args):
         (x_train, y_train), (x_test, y_test) = dataset
 
         if args.preprocessing:
-            x_train = alexnet_preprocess(x_train)
-            x_test = alexnet_preprocess(x_test)
-
+            x_train = vgg_preprocess(x_train)
+            x_test = vgg_preprocess(x_test)
 
         model.compile(
             optimizer=optimizers(args.optimizer, args.learning_rate),
@@ -76,7 +87,7 @@ def arg_parse():
 
     args.add_argument("--epochs", type=int, default=10, help="Number of epochs")
 
-    args.add_argument("--batch_size", type=int, default=128, help="Batch size")
+    args.add_argument("--batch_size", type=int, default=256, help="Batch size")
 
     args.add_argument("--learning_rate", type=float, default=0.01, help="Learning rate")
 
@@ -134,7 +145,7 @@ def arg_parse():
         "--input_shape",
         type=tuple,
         default=(224, 224, 3),
-        help="Output shape of the model",
+        help="Input shape of the model",
     )
 
     args.add_argument(

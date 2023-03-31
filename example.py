@@ -1,4 +1,4 @@
-from DeepVision.AlexNet import train
+from DeepVision.VGG import train
 
 if __name__ == "__main__":
     args = train.arg_parse()

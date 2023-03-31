@@ -18,12 +18,13 @@ class AlexNet:
 
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, input_shape=(224,224,3), output_shape=1000):
+        self.input_shape = input_shape
+        self.output_shape = output_shape
 
-    def alexnet(self, input_shape, classes):
+    def alexnet(self):
 
-        input_img = tf.keras.Input(shape=input_shape, name="input")
+        input_img = tf.keras.Input(shape=self.input_shape, name="input")
 
         c1 = tf.keras.layers.Conv2D(filters=96, kernel_size=(11, 11), activation="relu", strides=(4, 4), padding="valid", name="Conv1")(input_img)
         n1 = tf.nn.local_response_normalization(c1, depth_radius=5, bias=2, alpha=1e-4, beta=0.75, name="LRN1")
@@ -44,7 +45,7 @@ class AlexNet:
         do1 = tf.keras.layers.Dropout(rate=0.5, name="Dropout1")(d1)
         d2 = tf.keras.layers.Dense(units=4096, activation="relu", name="FC2")(do1)
         do2 = tf.keras.layers.Dropout(rate=0.5, name="Dropout2")(d2)
-        d3 = tf.keras.layers.Dense(units=classes, name="FC3")(do2)
+        d3 = tf.keras.layers.Dense(units=self.output_shape, name="FC3")(do2)
 
 
         model = tf.keras.Model(inputs=input_img, outputs=d3, name="AlexNet")
