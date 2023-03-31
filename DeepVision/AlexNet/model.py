@@ -26,11 +26,11 @@ class AlexNet:
         input_img = tf.keras.Input(shape=input_shape, name="input")
 
         c1 = tf.keras.layers.Conv2D(filters=96, kernel_size=(11, 11), activation="relu", strides=(4, 4), padding="valid", name="Conv1")(input_img)
-        n1 = tf.keras.layers.BatchNormalization(name="BatchNorm1")(c1)
+        n1 = tf.nn.local_response_normalization(c1, depth_radius=5, bias=2, alpha=1e-4, beta=0.75, name="LRN1")
         p1 = tf.keras.layers.MaxPooling2D(pool_size=(3, 3), strides=(2, 2), name="MaxPool1")(n1)
 
         c2 = tf.keras.layers.Conv2D(filters=256, kernel_size=(5, 5), activation="relu", strides=(1, 1), padding="same", name="Conv2")(p1)
-        n2 = tf.keras.layers.BatchNormalization(name="BatchNorm2")(c2)
+        n2 = tf.nn.local_response_normalization(c2, depth_radius=5, bias=2, alpha=1e-4, beta=0.75, name="LRN2")
         p2 = tf.keras.layers.MaxPooling2D(pool_size=(3, 3), strides=(2, 2), name="MaxPool2")(n2)
 
         c3 = tf.keras.layers.Conv2D(filters=384, kernel_size=(3, 3), activation="relu", strides=(1, 1), padding="same", name="Conv3")(p2)

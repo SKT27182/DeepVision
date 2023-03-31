@@ -59,16 +59,14 @@ We initialize the weights using a zero-mean Gaussian with standard deviation 0.0
 
 - I also haven't used the concept of wwigth decay.
 
-- In place of Local Response Normalization I have used Batch Normalization.
-
 | Layer | Input Size | Output Size | Kernel Size | Stride | Padding | Activation |
 | --- | --- | --- | --- | --- | --- | --- 
 | Input | - | 224x224x3 | - | - | - | - 
 | Conv1 | 224x224x3 | 54x54x96 | 11x11 | 4 | valid | ReLU |
-| BatchNorm1 | 54x54x96 | 54x54x96 | - | - | - | - |
+| LRN1 | 54x54x96 | 54x54x96 | - | - | - | - |
 | MaxPool1 | 54x54x96 | 26x26x96 | 3x3 | 2 | - | - |
 | Conv2 | 26x26x96 | 26x26x256 | 5x5 | 1 | same | ReLU |
-| BatchNorm2 | 26x26x256 | 26x26x256 | - | - | - | - |
+| LRN2 | 26x26x256 | 26x26x256 | - | - | - | - |
 | MaxPool2 | 26x26x256 | 12x12x256 | 3x3  | 2 | -| - |
 | Conv3 | 12x12x256 | 12x12x384 | 3x3 | 1 | same | ReLU |
 | Conv4 | 12x12x384 | 12x12x384 | 3x3 | 1 | same | ReLU |
@@ -81,4 +79,4 @@ We initialize the weights using a zero-mean Gaussian with standard deviation 0.0
 | Dropout2 (0.5) | 4096 | 4096 | - | - | - | - |
 | FC4 | 4096 | 1000 | - | - | - | - |
 
-Total Parameters: 46,789,386
+Total Parameters: 46,787,978
