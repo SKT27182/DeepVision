@@ -1,6 +1,6 @@
 import tensorflow as tf
 import argparse
-from DeepVision.LeNet.model import LeNet
+from DeepVision.classification.LeNet.model import LeNet
 from DeepVision.utils.data import Datasets
 from DeepVision.utils.helper import *
 
@@ -38,11 +38,11 @@ output_shape = {
 # make an instance of the LeNet class
 def load_model(args):
     if args.model == "LeNet_5_exact":
-        model = LeNet().lenet_5_exact(input_shape=output_shape["LeNet_5_exact"], classes=args.output_shape)
+        model = LeNet(input_shape=output_shape["LeNet_5_exact"], output_shape=args.output_shape).lenet_5_exact()
     elif args.model == "LeNet_5_mod_1":
-        model = LeNet().lenet_5_mod_1(input_shape=output_shape["LeNet_5_mod_1"], classes=args.output_shape)
+        model = LeNet(input_shape=output_shape["LeNet_5_mod_1"], output_shape=args.output_shape).lenet_5_mod_1()
     elif args.model == "LeNet_5_mod_2":
-        model = LeNet().lenet_5_mod_2(input_shape=output_shape["LeNet_5_mod_2"], classes=args.output_shape)
+        model = LeNet(input_shape=output_shape["LeNet_5_mod_2"], output_shape=args.output_shape).lenet_5_mod_2()
 
     return model
 

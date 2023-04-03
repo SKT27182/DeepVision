@@ -1,11 +1,11 @@
 import tensorflow as tf
 import argparse
-from DeepVision.VGG.model import VGG
+from DeepVision.classification.ResNet.model import ResNet
 from DeepVision.utils.data import Datasets
 from DeepVision.utils.helper import *
 
 
-def vgg_preprocess(x):
+def resnet_preprocess(x):
 
     """
 
@@ -27,21 +27,45 @@ def vgg_preprocess(x):
     return x
 
 
+resnet_repeat_block = {
+    "resnet18": [2, 2, 2, 2],
+    "resnet34": [3, 4, 6, 3],
+    "resnet50": [3, 4, 6, 3],
+    "resnet101": [3, 4, 23, 3],
+    "resnet152": [3, 8, 36, 3],
+}
+
+resnet_models = {
+    "resnet18": resnet_repeat_block["resnet18"],
+    "resnet34": resnet_repeat_block["resnet34"],
+    "resnet50": resnet_repeat_block["resnet50"],
+    "resnet101": resnet_repeat_block["resnet101"],
+    "resnet152": resnet_repeat_block["resnet152"],
+}
+
+resnet_blocks = {
+    "identical" : "ResidualIdenticalBlock",
+    "bottle_neck" : "ResidualBottleNeckBlock",
+    "plain" : "ResidualPlainBlock"
+}
+
+
 # make an instance of the LeNet class
 def load_model(args):
-    vgg_model = VGG(input_shape=args.input_shape, output_shape=args.output_shape)
-    if args.model == "VGG_A":
-        model = vgg_model.vgg_a()
-    elif args.model == "VGG_A_LRN":
-        model = vgg_model.vgg_a_lrn()
-    elif args.model == "VGG_B":
-        model = vgg_model.vgg_b()
-    elif args.model == "VGG_C":
-        model = vgg_model.vgg_c()
-    elif args.model == "VGG_D":
-        model = vgg_model.vgg_d()
-    elif args.model == "VGG_E":
-        model = vgg_model.vgg_e()
+    resnet_model = ResNet(input_shape=args.input_shape, output_shape=args.output_shape)
+    block = resnet_blocks[args.block]
+    repeate_block = resnet_repeat_block[args.model]
+    if args.model == "resnet18":
+        model = resnet_model.resnet18( block=block, repeate_block=repeate_block)
+    elif args.model == "resnet34":
+        model = resnet_model.resnet34( block=block, repeate_block=repeate_block)
+    elif args.model == "resnet50":
+        model = resnet_model.resnet50( block=block, repeate_block=repeate_block)
+    elif args.model == "resnet101":
+        model = resnet_model.resnet101( block=block, repeate_block=repeate_block)
+    elif args.model == "resnet152":
+        model = resnet_model.resnet152( block=block, repeate_block=repeate_block)
+
     return model
 
 
@@ -50,7 +74,7 @@ def main(args):
 
     # model_summary_only only
     if args.summary_only:
-        model.summary()
+        model.summary(expand_nested=True)
 
     # if args.architecture:
     #     tf.keras.utils.plot_model(model, show_shapes=True, show_layer_activations=True)
@@ -63,8 +87,8 @@ def main(args):
         (x_train, y_train), (x_test, y_test) = dataset
 
         if args.preprocessing:
-            x_train = vgg_preprocess(x_train)
-            x_test = vgg_preprocess(x_test)
+            x_train = resnet_preprocess(x_train)
+            x_test = resnet_preprocess(x_test)
 
         model.compile(
             optimizer=optimizers(args.optimizer, args.learning_rate),
@@ -153,6 +177,13 @@ def arg_parse():
         type=int,
         default=10,
         help="Output shape of the model",
+    )
+
+    args.add_argument(
+        "--block",
+        type=str,
+        default="bottle_neck",
+        help="Block to use for training",
     )
 
     args = args.parse_args()

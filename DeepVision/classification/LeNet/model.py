@@ -36,7 +36,7 @@ class LeNet:
 
         input_img = tf.keras.Input(shape=self.input_shape, name="input")
 
-        c1 = tf.keras.layers.Conv2D(filters=6, kernel_size=(5, 5), padding="valid", input_shape=input_shape, name="C1")(input_img)
+        c1 = tf.keras.layers.Conv2D(filters=6, kernel_size=(5, 5), padding="valid", name="C1")(input_img)
         c1 = tf.keras.layers.Activation(self.custom_activation(A=1.7159))(c1)
 
         s2 = tf.keras.layers.AveragePooling2D(pool_size=(2, 2), strides=(2, 2), name="S2")(c1)
@@ -66,7 +66,7 @@ class LeNet:
 
         input_img = tf.keras.Input(shape=self.input_shape)
 
-        c1 = tf.keras.layers.Conv2D(filters=6, kernel_size=(5, 5), padding="valid", input_shape=input_shape, name="C1")(input_img)
+        c1 = tf.keras.layers.Conv2D(filters=6, kernel_size=(5, 5), padding="valid", name="C1")(input_img)
         c1 = tf.keras.layers.Activation(tf.nn.relu)(c1)
 
         s2 = tf.keras.layers.AveragePooling2D(pool_size=(2, 2), strides=(2, 2), name="S2")(c1)
@@ -98,7 +98,7 @@ class LeNet:
 
         input_img = tf.keras.Input(shape=self.input_shape)
 
-        c1 = tf.keras.layers.Conv2D(filters=6, kernel_size=(5, 5), padding="same", input_shape=input_shape, name="C1")(input_img)
+        c1 = tf.keras.layers.Conv2D(filters=6, kernel_size=(5, 5), padding="same", name="C1")(input_img)
         c1 = tf.keras.layers.Activation(tf.nn.relu)(c1)
 
         s2 = tf.keras.layers.MaxPool2D(pool_size=(2, 2), strides=(2, 2), name="S2")(c1)

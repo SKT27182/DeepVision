@@ -1,6 +1,6 @@
 import tensorflow as tf
 import argparse
-from DeepVision.AlexNet.model import AlexNet
+from DeepVision.classification.AlexNet.model import AlexNet
 from DeepVision.utils.data import Datasets
 from DeepVision.utils.helper import *
 
@@ -29,7 +29,7 @@ def alexnet_preprocess(x):
 # make an instance of the LeNet class
 def load_model(args):
     if args.model == "AlexNet":
-        model = AlexNet(input_shape=args.input_shape, classes=args.output_shape).alexnet()
+        model = AlexNet(input_shape=args.input_shape, output_shape=args.output_shape).alexnet()
     return model
 
 
