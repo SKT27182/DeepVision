@@ -25,6 +25,10 @@ This repository contains implementations of various Computer Vision Architecture
 ### [ResNet](https://arxiv.org/pdf/1512.03385.pdf): This is the first CNN architecture to use residual connections. It was proposed by Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. The architecture consists of 18 convolutional layers, 5 pooling layers, and 3 fully connected layers. For more details, refer to the [ResNet](Notes/classification/ResNet.md) notes.
 
 ---
+
+### [Inception](https://arxiv.org/pdf/1409.4842v1.pdf): This is the first CNN architecture to use inception modules. It was proposed by Christian Szegedy, Vincent Vanhoucke, Sergey Ioffe, and Jonathon Shlens. The architecture consists of 22 convolutional layers, 5 pooling layers, and 3 fully connected layers. For more details, refer to the [Inception](Notes/classification/Inception.md) notes.
+
+---
 ---
 
 ## Generative Models
