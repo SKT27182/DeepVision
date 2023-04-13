@@ -96,13 +96,15 @@ def main(args):
             metrics=[metrics(args.metrics)],
         )
 
-        model.fit(
+        all_images = model.fit(
             x_train,
             y_train,
             batch_size=args.batch_size,
             epochs=args.epochs,
             validation_data=(x_test, y_test),
         )
+
+        
 
 
 
