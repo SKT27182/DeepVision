@@ -357,7 +357,7 @@ class NeuralStyleTransfer:
                     if (step) % show_interval == 0:
                         # check if it's jupyter notebook or terminal
                         if not terminal:  # True if it's jupyter notebook
-                            display_image = self.tensor_to_image(generated_image)
+                            # display_image = self.tensor_to_image(generated_image)
                             display_fn(display_image, clear=False)
                         else:
                             im = np.array(display_image)

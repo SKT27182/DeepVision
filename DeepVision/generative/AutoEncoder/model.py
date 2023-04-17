@@ -63,7 +63,7 @@ class AutoEncoder:
     def __init__(self, input_shape):
         self.input_shape = input_shape
 
-    def dense_encoder(self, inputs, neurons, activation="relu"):
+    def dense_encoder(self, inputs, neurons, activation):
         x = inputs
 
         for i, neuron in enumerate(neurons):
@@ -71,24 +71,24 @@ class AutoEncoder:
                 neuron, activation=activation, name=f"encoder_{i}"
             )(x)
 
-        encoded_x = self.bottlenck_dense(x, activation=activation)[0]
+        encoded_x = self.bottlenck_dense(x)[0]
 
         encoder_model = tf.keras.Model(inputs, encoded_x)
 
         return encoded_x, encoder_model
 
-    def bottlenck_dense(self, inputs, activation="relu"):
+    def bottlenck_dense(self, inputs):
         x = inputs
 
         x = tf.keras.layers.Dense(
-            self.encoding_shape, activation=activation, name="bottlenck"
+            self.encoding_shape, activation="relu", name="bottlenck"
         )(x)
 
         encoded_model = tf.keras.Model(inputs, x)
 
         return x, encoded_model
 
-    def dense_decoder(self, inputs, neurons, activation="relu"):
+    def dense_decoder(self, inputs, neurons, activation):
         x = inputs
 
         for i, neuron in enumerate(reversed(neurons)):
@@ -97,7 +97,7 @@ class AutoEncoder:
             )(x)
 
         decoded_x = tf.keras.layers.Dense(
-            self.input_shape, activation=activation, name="decode_output"
+            self.input_shape, activation="relu", name="decode_output"
         )(x)
 
         decoder_model = tf.keras.Model(inputs, decoded_x)
@@ -120,14 +120,13 @@ class AutoEncoder:
         return encoder_model, decoder_model, autoencoder
 
     def conv_compress(
-        self, inputs, filter, kernel_size, strides, activation="relu", name=""
+        self, inputs, filter, activation, name
     ):
         x = inputs
 
         x = tf.keras.layers.Conv2D(
             filter,
-            kernel_size,
-            strides,
+            kernel_size=3,
             activation=activation,
             padding="same",
             name=f"{name}_Conv1",
@@ -135,8 +134,7 @@ class AutoEncoder:
 
         x = tf.keras.layers.Conv2D(
             filter,
-            kernel_size,
-            strides,
+            kernel_size=3,
             activation=activation,
             padding="same",
             name=f"{name}_Conv2",
@@ -152,7 +150,7 @@ class AutoEncoder:
         return compressed_x, encoder_model
 
     def conv_encoder(
-        self, inputs, filters, kernel_size=3, strides=1, activation="relu"
+        self, inputs, filters, activation, encoding_depth
     ):
         x = inputs
 
@@ -160,23 +158,21 @@ class AutoEncoder:
             x, encoder_model = self.conv_compress(
                 x,
                 filter,
-                kernel_size,
-                strides,
                 activation=activation,
                 name=f"encoder_{i}",
             )
 
-        encoded_x = self.bottlenck_conv(x, activation=activation)[0]
+        encoded_x = self.bottlenck_conv(x, encoding_depth=encoding_depth)[0]
 
         encoded_model = tf.keras.Model(inputs, encoded_x)
 
         return encoded_x, encoded_model
 
-    def bottlenck_conv(self, inputs, activation="relu"):
+    def bottlenck_conv(self, inputs, encoding_depth):
         x = inputs
 
         x = tf.keras.layers.Conv2D(
-            1, 1, activation=activation, padding="same", name="bottlenck"
+            filters=encoding_depth, kernel_size=3, activation="relu", padding="same", name="bottlenck"
         )(x)
 
         encoded_model = tf.keras.Model(inputs, x)
@@ -184,26 +180,24 @@ class AutoEncoder:
         return x, encoded_model
 
     def conv_expand(
-        self, inputs, filter, kernel_size, strides, activation="relu", name=""
+        self, inputs, filter,  activation, name
     ):
         x = inputs
 
-        # upsample the image
-        x = tf.keras.layers.UpSampling2D(size=2, name=f"{name}_UpSample")(x)
-
         x = tf.keras.layers.Conv2DTranspose(
             filter,
-            kernel_size,
-            strides,
+            kernel_size=3,
             activation=activation,
             padding="same",
             name=f"{name}_ConvT1",
         )(x)
 
+        # upsample the image
+        x = tf.keras.layers.UpSampling2D(size=2, name=f"{name}_UpSample")(x)
+
         expanded_x = tf.keras.layers.Conv2DTranspose(
             filter,
-            kernel_size,
-            strides,
+            kernel_size=3,
             activation=activation,
             padding="same",
             name=f"{name}_ConvT2",
@@ -214,7 +208,7 @@ class AutoEncoder:
         return expanded_x, decoder_model
 
     def conv_decoder(
-        self, inputs, filters, kernel_size=3, strides=1, activation="relu"
+        self, inputs, filters, activation
     ):
         x = inputs
 
@@ -222,25 +216,23 @@ class AutoEncoder:
             x, decoder_model = self.conv_expand(
                 x,
                 filter,
-                kernel_size,
-                strides,
                 activation=activation,
                 name=f"decoder_{i}",
             )
 
         decoded_x = tf.keras.layers.Conv2DTranspose(
-            self.input_shape[-1], 1, activation=activation, name="decode_output"
+            self.input_shape[-1], kernel_size=3, activation="relu",padding="same" , name="decode_output"
         )(x)
 
         decoder_model = tf.keras.Model(inputs, decoded_x)
 
         return decoded_x, decoder_model
 
-    def conv_autoencoder(self, filters, activation="relu"):
+    def conv_autoencoder(self, filters, activation="relu", encoding_depth=128):
         inputs = tf.keras.Input(shape=self.input_shape)
 
         encoded_x, encoder_model = self.conv_encoder(
-            inputs, filters, activation=activation
+            inputs, filters, activation, encoding_depth
         )
 
         decoded_x, decoder_model = self.conv_decoder(
@@ -251,7 +243,7 @@ class AutoEncoder:
 
         return encoder_model, decoder_model, autoencoder
 
-    def build(self, neurons=None, encoding_shape=None, filters=None, kernel_size=None, activation="relu"):
+    def build(self, neurons=None, encoding_shape=None, filters=None, kernel_size=None, activation="relu", encoding_depth=128):
         """
         Builds the autoencoder model
         
@@ -282,7 +274,7 @@ class AutoEncoder:
             return
         elif filters is not None:
             self.encoder, self.decoder, self.autoencoder = self.conv_autoencoder(
-                filters, activation=activation
+                filters, activation=activation, encoding_depth=encoding_depth
             )
             return
         else:
@@ -376,21 +368,23 @@ class AutoEncoder:
         encoded_img = self.encode(inputs)
         decoded_img = self.decode(encoded_img)
 
+        if (encoded_img.shape[-1] > 3) and len(encoded_img.shape) == 4:
+            encoded_img = tf.math.reduce_mean(encoded_img, axis=-1, keepdims=True)
+
         if plot:
-            random_indx = np.random.randint(0, len(inputs), 10)
+            
             plt.figure(figsize=(20, 4))
             for i in range(10):
-                indx = random_indx[i]
                 # display original
                 ax = plt.subplot(3, 10, i + 1)
-                plt.imshow(inputs[indx].numpy().reshape(input_shape))
+                plt.imshow(inputs[i].numpy().reshape(input_shape))
                 plt.gray()
                 ax.get_xaxis().set_visible(False)
                 ax.get_yaxis().set_visible(False)
 
                 # display encoded
                 ax = plt.subplot(3, 10, i + 1 + 10)
-                plt.imshow(encoded_img[indx].numpy().reshape(encoded_shape))
+                plt.imshow(encoded_img[i].numpy().reshape(encoded_shape))
                 plt.gray()
                 ax.get_xaxis().set_visible(False)
                 ax.get_yaxis().set_visible(False)
@@ -398,7 +392,7 @@ class AutoEncoder:
 
                 # display reconstruction
                 ax = plt.subplot(3, 10, i + 1 + 20)
-                plt.imshow(decoded_img[indx].numpy().reshape(input_shape))
+                plt.imshow(decoded_img[i].numpy().reshape(input_shape))
                 plt.gray()
                 ax.get_xaxis().set_visible(False)
                 ax.get_yaxis().set_visible(False)

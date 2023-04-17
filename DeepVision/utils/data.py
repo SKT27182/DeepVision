@@ -28,8 +28,8 @@ class Datasets:
         x_test = x_test.astype('float32')
 
         # reshape the data to 4D tensor
-        x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
-        x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
+        x_train = x_train.reshape(x_train.shape[0], 32, 32, 3)
+        x_test = x_test.reshape(x_test.shape[0], 32, 32, 3)
 
         y_train = tfku.to_categorical(y_train, 10)
         y_test = tfku.to_categorical(y_test, 10)
@@ -43,8 +43,8 @@ class Datasets:
         x_test = x_test.astype('float32')
 
         # reshape the data to 4D tensor
-        x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
-        x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
+        x_train = x_train.reshape(x_train.shape[0], 32, 32, 3)
+        x_test = x_test.reshape(x_test.shape[0], 32, 32, 3)
 
         y_train = tfku.to_categorical(y_train, 100)
         y_test = tfku.to_categorical(y_test, 100)

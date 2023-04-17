@@ -51,6 +51,5 @@ In this AutoEncoder, we have used `Dense` layers for encoding and decoding.
 
 In this AutoEncoder, we have used `Conv2D` layers for encoding and `Conv2DTranspose` layers for decoding.
 
-- Here we have used a set of 2 `Conv2D` layers followed by a `MaxPooling2D` layer for encoding. and In the decoding part, we have used a `UpSampling2D` layer followed by a set of 2 `Conv2DTranspose` layers.
-
+- Here we have used a set of `2-Conv2D` layers followed by a `MaxPooling2D` layer for encoding. and In the decoding part, we have used a `Conv2DTranspose` then `UpSampling2D` layer and then again a `Conv2DTranspose` layer to follow the encoding part.
 ---
