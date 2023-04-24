@@ -33,10 +33,16 @@ This repository contains implementations of various Computer Vision Architecture
 
 ## Generative Models
 
+### [NeuralStyleTransfer](https://arxiv.org/pdf/1508.06576.pdf): This is a technique that is used to transfer the style of one image onto another image. It was proposed by Leon A. Gatys, Alexander S. Ecker, and Matthias Bethge. For more details, refer to the [NeuralStyleTransfer](Notes/generative/NeuralStyleTransfer.md) notes.
+
+---
+
 ### [AutoEncoder](https://www.science.org/doi/pdf/10.1126/science.1127647): This is a neural network architecture that is used to learn efficient data encodings in an unsupervised manner. It was proposed by Geoffrey Hinton and his students at the University of Toronto. The architecture consists of two parts: an encoder and a decoder. The encoder learns to compress the input data into a lower dimensional representation, and the decoder learns to reconstruct the input data from the lower dimensional representation. For more details, refer to the [AutoEncoder](Notes/generative/Autoencoder.md) notes.
 
 ---
 
-### [NeuralStyleTransfer](https://arxiv.org/pdf/1508.06576.pdf): This is a technique that is used to transfer the style of one image onto another image. It was proposed by Leon A. Gatys, Alexander S. Ecker, and Matthias Bethge. For more details, refer to the [NeuralStyleTransfer](Notes/generative/NeuralStyleTransfer.md) notes.
-
 ### [Variational AutoEncoder](https://arxiv.org/pdf/1312.6114v10.pdf): This is a neural network architecture that is used to learn efficient data encodings in an unsupervised manner. It was proposed by Diederik P Kingma and Max Welling. The architecture consists of two parts: an encoder and a decoder. The encoder learns to compress the input data into a lower dimensional representation, and the decoder learns to reconstruct the input data from the lower dimensional representation. The encoder is trained using a variational inference technique. For more details, refer to the [Variational AutoEncoder](Notes/generative/VariationalAutoencoder.md) notes.
+
+---
+
+### [Generative Adversarial Network](https://arxiv.org/pdf/1406.2661.pdf): This is a neural network architecture that is used to learn efficient data encodings in an unsupervised manner. It was proposed by Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. The architecture consists of two parts: a generator and a discriminator. The generator learns to generate data that is similar to the input data, and the discriminator learns to distinguish between the input data and the generated data. For more details, refer to the [Generative Adversarial Network](Notes/generative/GANs.md) notes.

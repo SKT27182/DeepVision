@@ -48,7 +48,7 @@ class Sampling(tf.keras.layers.Layer):
 
 
 class VAE:
-    def __init__(self, input_shape, latent_dim=2):
+    def __init__(self, input_shape):
         """
         Initialize the VAE
 
@@ -57,11 +57,8 @@ class VAE:
         input_shape : tuple
             Shape of the input
 
-        latent_dim : int
-            Dimension of the latent space
         """
         self.input_shape = input_shape
-        self.latent_dim = 2
         self.encoder = None
         self.decoder = None
         self.vae = None
@@ -282,8 +279,6 @@ class VAE:
         x,
         epochs=10,
         batch_size=32,
-        validation_data=None,
-        callbacks=None,
         show_image=False,
         show_interval=10,
         terminal=False,
