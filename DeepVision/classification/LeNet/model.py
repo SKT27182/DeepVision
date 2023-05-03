@@ -67,7 +67,7 @@ class LeNet:
         input_img = tf.keras.Input(shape=self.input_shape)
 
         c1 = tf.keras.layers.Conv2D(filters=6, kernel_size=(5, 5), padding="valid", name="C1")(input_img)
-        c1 = tf.keras.layers.Activation(tf.nn.relu)(c1)
+        c1 = tf.keras.layers.Activation(tf.nn.relu)(c1) 
 
         s2 = tf.keras.layers.AveragePooling2D(pool_size=(2, 2), strides=(2, 2), name="S2")(c1)
 
