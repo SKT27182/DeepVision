@@ -46,3 +46,10 @@ This repository contains implementations of various Computer Vision Architecture
 ---
 
 ### [Generative Adversarial Network](https://arxiv.org/pdf/1406.2661.pdf): This is a neural network architecture that is used to learn efficient data encodings in an unsupervised manner. It was proposed by Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. The architecture consists of two parts: a generator and a discriminator. The generator learns to generate data that is similar to the input data, and the discriminator learns to distinguish between the input data and the generated data. For more details, refer to the [Generative Adversarial Network](Notes/generative/GANs.md) notes.
+
+---
+---
+
+## Object Detection Models
+
+### [U-Net](https://arxiv.org/pdf/1505.04597v1.pdf): This is a neural network architecture that is used for image segmentation. It was proposed by Olaf Ronneberger, Philipp Fischer, and Thomas Brox. The architecture consists of an encoder and a decoder. The encoder learns to compress the input data into a lower dimensional representation, and the decoder learns to reconstruct the input data from the lower dimensional representation. For more details, refer to the [U-Net](Notes/object_detection/UNet.md) notes.
