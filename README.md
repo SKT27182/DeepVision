@@ -29,6 +29,10 @@ This repository contains implementations of various Computer Vision Architecture
 ### [Inception](https://arxiv.org/pdf/1409.4842v1.pdf): This is the first CNN architecture to use inception modules. It was proposed by Christian Szegedy, Vincent Vanhoucke, Sergey Ioffe, and Jonathon Shlens. The architecture consists of 22 convolutional layers, 5 pooling layers, and 3 fully connected layers. For more details, refer to the [Inception](Notes/classification/Inception.md) notes.
 
 ---
+
+### [Densenet](https://arxiv.org/pdf/1608.06993v5.pdf): This is the first CNN architecture to use dense blocks. It was proposed by Gao Huang, Zhuang Liu, Laurens van der Maaten, and Kilian Q. Weinberger. The architecture consists of 121 convolutional layers, 5 pooling layers, and 3 fully connected layers. For more details, refer to the [Densenet](Notes/classification/Densenet.md) notes.
+
+---
 ---
 
 ## Generative Models
@@ -52,4 +56,4 @@ This repository contains implementations of various Computer Vision Architecture
 
 ## Object Detection Models
 
-### [U-Net](https://arxiv.org/pdf/1505.04597v1.pdf): This is a neural network architecture that is used for image segmentation. It was proposed by Olaf Ronneberger, Philipp Fischer, and Thomas Brox. The architecture consists of an encoder and a decoder. The encoder learns to compress the input data into a lower dimensional representation, and the decoder learns to reconstruct the input data from the lower dimensional representation. For more details, refer to the [U-Net](Notes/object_detection/UNet.md) notes.
+### [U-Net](https://arxiv.org/pdf/1505.04597v1.pdf): This is a neural network architecture that is used for image segmentation. It was proposed by Olaf Ronneberger, Philipp Fischer, and Thomas Brox. The architecture consists of an encoder and a decoder. The encoder learns to compress the input data into a lower dimensional representation, and the decoder learns to reconstruct the input data from the lower dimensional representation. For more details, refer to the [U-Net](Notes/detection/U-Net.md) notes.
