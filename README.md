@@ -33,6 +33,10 @@ This repository contains implementations of various Computer Vision Architecture
 ### [Densenet](https://arxiv.org/pdf/1608.06993v5.pdf): This is the first CNN architecture to use dense blocks. It was proposed by Gao Huang, Zhuang Liu, Laurens van der Maaten, and Kilian Q. Weinberger. The architecture consists of 121 convolutional layers, 5 pooling layers, and 3 fully connected layers. For more details, refer to the [Densenet](Notes/classification/DenseNet.md) notes.
 
 ---
+
+### [Xception](https://arxiv.org/pdf/1610.02357v3.pdf): This is the first CNN architecture to use depthwise separable convolutions. It was proposed by François Chollet. The architecture consists of 36 convolutional layers, 5 pooling layers, and 3 fully connected layers. For more details, refer to the [Xception](Notes/classification/Xception.md) notes.
+
+---
 ---
 
 ## Generative Models
