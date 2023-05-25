@@ -288,3 +288,32 @@ class ResidualBottleNeckBlock(Blocks):
         return self.call(inputs=inputs)
 
 
+
+class ResPlainBlock(Blocks):
+    def __init__(self, filters, kernel_size=3, strides=1, name=None):
+        self.name = name
+
+        self.conv1 = tf.keras.layers.Conv2D(
+            filters=filters, kernel_size=kernel_size, strides=strides, padding="same"
+        )
+        self.bn1 = tf.keras.layers.BatchNormalization()
+
+        self.conv2 = tf.keras.layers.Conv2D(
+            filters=filters, kernel_size=kernel_size, strides=1, padding="same"
+        )
+        self.bn2 = tf.keras.layers.BatchNormalization()
+
+    def call(self, inputs):
+        x = inputs
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = tf.nn.relu(x)
+        x = self.conv2(x)
+        x = self.bn2(x)
+
+        x = tf.nn.relu(x)
+        model = tf.keras.Model(inputs=inputs, outputs=x, name=self.name)
+        return x, model
+    
+    def __call__(self, inputs):
+        return self.call(inputs=inputs)
