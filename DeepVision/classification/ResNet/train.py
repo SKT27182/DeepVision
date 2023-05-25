@@ -3,6 +3,11 @@ import argparse
 from DeepVision.classification.ResNet.model import ResNet
 from DeepVision.utils.data import Datasets
 from DeepVision.utils.helper import *
+import ast
+
+class TupleAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, tuple(ast.literal_eval(values)))
 
 
 def resnet_preprocess(x):
@@ -122,7 +127,7 @@ def arg_parse():
     )
 
     args.add_argument(
-        "--model", type=str, default="AlexNet", help="Model to use for training"
+        "--model", type=str, default="resnet18", help="Model to use for training"
     )
 
     args.add_argument(
@@ -169,7 +174,7 @@ def arg_parse():
 
     args.add_argument(
         "--input_shape",
-        type=tuple,
+        action=TupleAction,
         default=(224, 224, 3),
         help="Input shape of the model",
     )

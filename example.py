@@ -1,4 +1,4 @@
-from DeepVision.classification.DenseNet import train
+from DeepVision.classification.ResNet import train
 
 if __name__ == "__main__":
     args = train.arg_parse()
