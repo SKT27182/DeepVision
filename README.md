@@ -40,6 +40,11 @@ This repository contains implementations of various Computer Vision Architecture
 
 ### [MobileNets](https://arxiv.org/pdf/1704.04861v1.pdf): This is the first CNN architecture to use depthwise separable convolutions. It was proposed by Andrew G. Howard, Menglong Zhu, Bo Chen, Dmitry Kalenichenko, Weijun Wang, Tobias Weyand, Marco Andreetto, and Hartwig Adam. The architecture consists of 28 convolutional layers, 5 pooling layers, and 3 fully connected layers. For more details, refer to the [MobileNet](Notes/classification/MobileNets.md) notes.
 
+
+---
+
+### [EfficientNet](https://arxiv.org/pdf/1905.11946v5.pdf): This is the first CNN architecture to use compound scaling. It was proposed by Mingxing Tan and Quoc V. Le. The architecture consists of 28 convolutional layers, 5 pooling layers, and 3 fully connected layers. For more details, refer to the [EfficientNet](Notes/classification/EfficientNet.md) notes.
+
 ---
 ---
 
