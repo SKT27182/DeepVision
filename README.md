@@ -37,6 +37,10 @@ This repository contains implementations of various Computer Vision Architecture
 ### [Xception](https://arxiv.org/pdf/1610.02357v3.pdf): This is the first CNN architecture to use depthwise separable convolutions. It was proposed by François Chollet. The architecture consists of 36 convolutional layers, 5 pooling layers, and 3 fully connected layers. For more details, refer to the [Xception](Notes/classification/Xception.md) notes.
 
 ---
+
+### [MobileNets](https://arxiv.org/pdf/1704.04861v1.pdf): This is the first CNN architecture to use depthwise separable convolutions. It was proposed by Andrew G. Howard, Menglong Zhu, Bo Chen, Dmitry Kalenichenko, Weijun Wang, Tobias Weyand, Marco Andreetto, and Hartwig Adam. The architecture consists of 28 convolutional layers, 5 pooling layers, and 3 fully connected layers. For more details, refer to the [MobileNet](Notes/classification/MobileNets.md) notes.
+
+---
 ---
 
 ## Generative Models
