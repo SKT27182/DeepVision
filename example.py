@@ -1,4 +1,4 @@
-from DeepVision.classification.Xception import train
+from DeepVision.classification.MobileNets import train
 
 if __name__ == "__main__":
     args = train.arg_parse()

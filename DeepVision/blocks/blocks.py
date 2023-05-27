@@ -317,3 +317,45 @@ class ResPlainBlock(Blocks):
     
     def __call__(self, inputs):
         return self.call(inputs=inputs)
+
+
+class MobileNetV1(Blocks):
+
+    def __init__(self, filters, kernel_size=3, strides=1, activation="relu", alpha=1, name=None):
+        self.filters = filters
+        self.kernel_size = kernel_size
+        self.strides = strides
+        self.activation = activation
+        self.alpha = alpha
+        self.name = name
+
+        super().__init__(name=name)
+
+
+    def call(self, inputs):
+
+        x = inputs
+
+        filters = int(self.filters * self.alpha)
+
+        # Depthwise Convolution
+        x = tf.keras.layers.DepthwiseConv2D(
+            kernel_size=self.kernel_size, strides=self.strides, padding="same"
+        )(x)
+        x = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.Activation(self.activation)(x)
+
+        # Pointwise Convolution
+        x = tf.keras.layers.Conv2D(
+            filters=filters, kernel_size=1, strides=1, padding="same"
+        )(x)
+        x = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.Activation(self.activation)(x)
+
+        block = tf.keras.Model(inputs=inputs, outputs=x, name="DSC"+self.name)
+
+        return x, block
+    
+    def __call__(self, inputs):
+
+        return self.call(inputs=inputs)
