@@ -1,6 +1,6 @@
 import tensorflow as tf
 import argparse
-from DeepVision.classification.DenseNet.model import DenseNet
+from DeepVision.classification.Xception.model import Xception
 from DeepVision.utils.data import Datasets
 from DeepVision.utils.helper import *
 import ast
@@ -10,16 +10,11 @@ class TupleAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, tuple(ast.literal_eval(values)))
 
-
 # make an instance of the LeNet class
 def load_model(args):
-    densenet_model = DenseNet(
-        input_shape=args.input_shape, output_shape=args.output_shape
-    )
+    xception = Xception(input_shape=args.input_shape, output_shape=args.output_shape)
 
-    model = densenet_model.build(
-        k=args.k, drop_rate=args.drop_rate, size=args.size, theta=args.theta, pre_process=args.pre_process
-    )
+    model = xception.build(args.pre_process)
 
     return model
 
@@ -30,15 +25,17 @@ def main(args):
     # model_summary_only only
     if args.summary_only:
         model.summary()
-        return
 
     # if args.architecture:
     #     tf.keras.utils.plot_model(model, show_shapes=True, show_layer_activations=True)
 
+
     if args.train:
+
         dataset = Datasets().load_dataset(args.dataset)
 
         (x_train, y_train), (x_test, y_test) = dataset
+
 
         model.compile(
             optimizer=optimizers(args.optimizer, args.learning_rate),
@@ -46,13 +43,18 @@ def main(args):
             metrics=[metrics(args.metrics)],
         )
 
-        all_images = model.fit(
+        model.fit(
             x_train,
             y_train,
             batch_size=args.batch_size,
             epochs=args.epochs,
             validation_data=(x_test, y_test),
         )
+
+
+
+        
+
 
 
 def arg_parse():
@@ -69,30 +71,17 @@ def arg_parse():
     )
 
     args.add_argument(
+        "--pre_process",
+        action=argparse.BooleanOptionalAction,
+        type=bool,
+        default=True,
+        help="Whether to use preprocessing or not",
+    )
+
+    args.add_argument(
         "--optimizer", type=str, default="adam", help="Optimizer to use for training"
     )
 
-    args.add_argument(
-        "--drop_rate", type=float, default=0.2, help="drop_rate of the Dense Blocks"
-    )
-
-    args.add_argument("--k", type=int, default=32, help="k of the Dense Blocks")
-
-    args.add_argument("--size", type=int, default=121, help="size of the Dense Blocks")
-
-    args.add_argument(
-        "--theta",
-        type=float,
-        default=1,
-        help="theta of the Transition Blocks",
-    )
-
-    args.add_argument(
-        "--pre_process",
-        type=bool,
-        default=True,
-        help="Whether to prepocess the input data or not",
-    )
     args.add_argument(
         "--loss",
         type=str,

@@ -26,7 +26,7 @@
 
 ![DenseNet](images/0601.jpeg)
 
-## terminology
+## Terminology
 
 **Growth Rate**: This determines the number of features maps output into individual layers inside dense block.
 
@@ -36,7 +36,26 @@
 
 **Transition Layer**: It aggregates the feature maps from a dense blocka and reduce its dimensions. So Max Pooling is enabled in this layer
 
+# Architecture
+
 ![Architecture](images/0603.jpeg)
+
+The network consists of 3 parts:
+
+- **Dense Blocks**: Each dense block consists of multiple dense layers. Each dense layer has a composite function of `Batch Normalization`, `ReLU`, and `Convolution`. The input of each dense layer is a concatenation of all the feature maps of the previous layers. The output of each dense layer is fed into the next dense layer. The feature maps of all layers are concatenated again and fed into the next dense layer. This process is repeated until the last dense layer in the block.
+
+- **Transition Layers**: The transition layers are used to reduce the number of feature maps. The transition layers consist of a `Batch Normalization`, `1x1 Convolution`, followed by `2x2 Average Pooling` layer. The number of feature maps in the transition layer is reduced by a factor of `θ` (referred to as the compression factor) compared to the previous dense block. The transition layers are used to control the growth of the number of feature maps and to reduce the model complexity.
+
+- **Classification Layer**: The global average pooling is used to reduce the number of parameters in the model. The output of the global average pooling is fed into a `softmax` layer for classification.
+
+## DenseNetC and DenseNetBC
+
+- If a dense block contains `m feature-maps`, we let the following `transition layer` generate $thetam$ output featuremaps, where `0 <θ ≤1` is referred to as the `compression factor`. When `θ = 1`, the number of feature-maps across transition layers remains unchanged. We refer the DenseNet with `θ <1` as `DenseNet-C`, and we set `θ = 0.5` in our experiment. When both the `bottleneck and transition layers with θ < 1` are used, we refer to our model as `DenseNet-BC`.
+
+
+## De
+
+
 
 # My Observation:
 

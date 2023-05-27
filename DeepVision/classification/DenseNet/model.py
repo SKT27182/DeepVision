@@ -74,6 +74,8 @@ class DenseNet:
 
         ouput_features = int(theta * input_features)
 
+        x = tf.keras.layers.BatchNormalization()(x)
+
         x = tf.keras.layers.Conv2D(ouput_features, 1, strides=1, padding="same")(x)
 
         x = tf.keras.layers.AveragePooling2D(2, 2)(x)
@@ -87,7 +89,7 @@ class DenseNet:
 
         return x
 
-    def _dense_block(self, inputs, n_blocks, name=None):
+    def _dense_block(self, inputs, n_blocks, theta, name=None):
         x = inputs
 
         repeated_layers = DenseNet_Layers[self.size]
@@ -102,7 +104,7 @@ class DenseNet:
             self.model.add(block)
 
             # add transition layer
-            x = self._transition_layer(x, theta=0.5, name=str(i))
+            x = self._transition_layer(x, theta=theta, name=str(i))
 
         # add last dense block
         dense_blocs = DenseBlock(repeated_layers[-1], self.k, name=str(n_blocks - 1))
@@ -113,7 +115,7 @@ class DenseNet:
 
         return x
 
-    def build(self, k=32, drop_rate=0.2, size=121, pre_process=True):
+    def build(self, k=32, drop_rate=0.2, size=121, theta=1,  pre_process=True):
 
         self.k = k
         self.drop_rate = drop_rate
@@ -130,7 +132,7 @@ class DenseNet:
         
         x = self._densenet_top(x)
 
-        x = self._dense_block(x, 4)
+        x = self._dense_block(x, 4, theta)
 
         x = self._densenet_bottom(x)
 
