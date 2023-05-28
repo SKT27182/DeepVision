@@ -89,7 +89,12 @@ class NeuralStyleTransfer:
 
     def _preprocess_image(self, image):
         image = tf.cast(image, dtype=tf.float32)
-        image = (image / 127.5) - 1.0
+
+        # check if the extractor have preprocess_input method
+        if hasattr(self.feature_extractor, "preprocess_input"):
+            image = self.feature_extractor.preprocess_input(image)
+        else:
+            image = image / 255.0
 
         return image
 
