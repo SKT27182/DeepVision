@@ -20,6 +20,9 @@ class Blocks:
 class DenseBlock(Blocks):
     def __init__(self, n_layers, k=12, drop_rate =0.2, name=None):
         """
+
+        This block is used in DenseNet architecture
+
         DenseBlock
         ----------
 
@@ -88,6 +91,9 @@ class DenseBlock(Blocks):
 class InceptionNaiveBlock(Blocks):
 
     """
+
+    This Block is used in original GoogLeNet architecture
+
     InceptionNaiveBlock
 
     Parameters
@@ -136,6 +142,9 @@ class InceptionNaiveBlock(Blocks):
 class InceptionBlock(Blocks):
 
     """
+
+    This Block is used in original GoogLeNet architecture
+
     InceptionBlock
 
     Parameters
@@ -200,6 +209,12 @@ class InceptionBlock(Blocks):
 
 
 class ResidualIdenticalBlock(Blocks):
+
+    """
+
+    This Block is used in ResNet architecture
+
+    """
     def __init__(self, filters, kernel_size=3, strides=1, name=None):
 
         self.name = name
@@ -240,6 +255,12 @@ class ResidualIdenticalBlock(Blocks):
     
 
 class ResidualBottleNeckBlock(Blocks):
+
+    """
+
+    This Block is used in ResNet architecture
+
+    """
     def __init__(self, filters, kernel_size=3, strides=1, name=None):
         self.name = name
 
@@ -290,6 +311,12 @@ class ResidualBottleNeckBlock(Blocks):
 
 
 class ResPlainBlock(Blocks):
+
+    """
+
+    This Block is used in ResNet architecture
+
+    """
     def __init__(self, filters, kernel_size=3, strides=1, name=None):
         self.name = name
 
@@ -320,6 +347,12 @@ class ResPlainBlock(Blocks):
 
 
 class MobileNetV1(Blocks):
+
+    """
+
+    This Block is used in original MobileNet architecture
+
+    """
 
     def __init__(self, filters, kernel_size=3, strides=1, activation="relu", alpha=1, name=None):
         self.filters = filters
@@ -359,3 +392,121 @@ class MobileNetV1(Blocks):
     def __call__(self, inputs):
 
         return self.call(inputs=inputs)
+    
+
+class SE(Blocks):
+
+    """
+    This Block is used in original Squeeze and Excitation Networks architecture
+    
+    In MobileNetV2, SE is used in inverted residual block
+
+    It first resuces the number of channels by reduction ratio and then
+    increases the number of channels back to the original number of channels
+    
+    """
+
+    def __init__(self, se_ratio=1/16, activation="relu", name=None):
+        self.se_ratio = se_ratio
+        self.activation = activation
+        self.name = name
+
+        super().__init__(name=name)
+
+    def call(self, inputs):
+
+        x = inputs
+
+        # Global Average Pooling
+        x = tf.keras.layers.GlobalAveragePooling2D()(x)
+
+        # Reshape
+        x = tf.keras.layers.Reshape((1, 1, inputs.shape[-1]))(x)
+
+        # Fully Connected Layer (Squeeze)
+        x = tf.keras.layers.Conv2D(
+            filters=max(1, int(inputs.shape[-1] * self.se_ratio)), kernel_size=1, strides=1, padding="same"
+        )(x)
+        x = tf.keras.layers.Activation(self.activation)(x)
+
+        # Fully Connected Layer (Excitation)
+        x = tf.keras.layers.Conv2D(
+            filters=inputs.shape[-1], kernel_size=1, strides=1, padding="same"
+        )(x)
+        x = tf.keras.layers.Activation("sigmoid")(x)
+
+        # Scale
+        x = tf.keras.layers.Multiply()([inputs, x])
+
+        block = tf.keras.Model(inputs=inputs, outputs=x, name="SE"+self.name)
+
+        return x, block
+    
+    def __call__(self, inputs):
+            
+            return self.call(inputs=inputs)
+    
+class MobileNetV2(Blocks):
+
+    """
+
+    This Block is used in MobileNetV2 architecture
+
+    """
+
+    def __init__(self, filters, kernel_size, strides=1, activation="relu", expansion=6, se_ratio=0, name=None):
+        self.kernel_size = kernel_size
+        self.filters = filters
+        self.strides = strides
+        self.activation = activation
+        self.expansion = expansion
+        self.se_ratio = se_ratio
+        self.name = name
+
+        super().__init__(name=name)
+
+    def call(self, inputs):
+
+        x = inputs
+
+        # Expansion along channels
+        x = tf.keras.layers.Conv2D(
+            filters=int(inputs.shape[-1]*self.expansion), kernel_size=1, strides=1, padding="same"
+        )(x)
+        x = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.Activation(self.activation)(x)
+
+
+        # Depthwise Convolution
+        x = tf.keras.layers.DepthwiseConv2D(
+            kernel_size=self.kernel_size, strides=self.strides, padding="same"
+        )(x)
+        x = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.Activation(self.activation)(x)
+
+        # Squeeze and Excitation
+        if 0 < self.se_ratio <  1:
+            x = SE(
+                se_ratio= self.se_ratio,
+                activation=self.activation,
+                name=self.name
+            )(x)[0]
+
+        # Pointwise Convolution
+        x = tf.keras.layers.Conv2D(
+            filters=self.filters, kernel_size=1, strides=1, padding="same"
+        )(x)
+        x = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.Activation(self.activation)(x)
+
+        # Skip Connection
+        if inputs.shape[-1] == self.filters and self.strides == 1:
+            x = tf.keras.layers.Add()([inputs, x])
+
+        block = tf.keras.Model(inputs=inputs, outputs=x, name="MBConv"+self.name)
+
+        return x, block
+    
+    def __call__(self, inputs):
+            
+            return self.call(inputs=inputs)

@@ -1,4 +1,4 @@
-from DeepVision.classification.MobileNets import train
+from DeepVision.classification.EfficientNet import train
 
 if __name__ == "__main__":
     args = train.arg_parse()
