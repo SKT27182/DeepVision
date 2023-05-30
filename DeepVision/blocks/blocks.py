@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 class Blocks:
-    def __init__(self,  name=None):
+    def __init__(self,  name=""):
         self.name = name
 
     def __call__(self, x):
@@ -18,7 +18,7 @@ class Blocks:
         pass
 
 class DenseBlock(Blocks):
-    def __init__(self, n_layers, k=12, drop_rate =0.2, name=None):
+    def __init__(self, n_layers, k=12, drop_rate =0.2, name=""):
         """
 
         This block is used in DenseNet architecture
@@ -105,7 +105,7 @@ class InceptionNaiveBlock(Blocks):
     name : str
         name of the block
     """
-    def __init__(self, filters, name=None):
+    def __init__(self, filters, name=""):
 
         self.name = name
 
@@ -156,7 +156,7 @@ class InceptionBlock(Blocks):
     name : str
         name of the block
     """
-    def __init__(self, filters, name=None):
+    def __init__(self, filters, name=""):
         
         self.name = name
         
@@ -215,7 +215,7 @@ class ResidualIdenticalBlock(Blocks):
     This Block is used in ResNet architecture
 
     """
-    def __init__(self, filters, kernel_size=3, strides=1, name=None):
+    def __init__(self, filters, kernel_size=3, strides=1, name=""):
 
         self.name = name
 
@@ -261,7 +261,7 @@ class ResidualBottleNeckBlock(Blocks):
     This Block is used in ResNet architecture
 
     """
-    def __init__(self, filters, kernel_size=3, strides=1, name=None):
+    def __init__(self, filters, kernel_size=3, strides=1, name=""):
         self.name = name
 
         self.conv1 = tf.keras.layers.Conv2D(
@@ -317,7 +317,7 @@ class ResPlainBlock(Blocks):
     This Block is used in ResNet architecture
 
     """
-    def __init__(self, filters, kernel_size=3, strides=1, name=None):
+    def __init__(self, filters, kernel_size=3, strides=1, name=""):
         self.name = name
 
         self.conv1 = tf.keras.layers.Conv2D(
@@ -354,7 +354,7 @@ class MobileNetV1(Blocks):
 
     """
 
-    def __init__(self, filters, kernel_size=3, strides=1, activation="relu", alpha=1, name=None):
+    def __init__(self, filters, kernel_size=3, strides=1, activation="relu", alpha=1, name=""):
         self.filters = filters
         self.kernel_size = kernel_size
         self.strides = strides
@@ -406,7 +406,7 @@ class SE(Blocks):
     
     """
 
-    def __init__(self, se_ratio=1/16, activation="relu", name=None):
+    def __init__(self, se_ratio=1/16, activation="relu", name=""):
         self.se_ratio = se_ratio
         self.activation = activation
         self.name = name
@@ -454,7 +454,7 @@ class MobileNetV2(Blocks):
 
     """
 
-    def __init__(self, filters, kernel_size, strides=1, activation="relu", expansion=6, se_ratio=0, name=None):
+    def __init__(self, filters, kernel_size, strides=1, activation="relu", expansion=6, se_ratio=0, name=""):
         self.kernel_size = kernel_size
         self.filters = filters
         self.strides = strides

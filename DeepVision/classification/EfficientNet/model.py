@@ -8,7 +8,7 @@ EfficientNetB0_layers = [1, 2, 2, 3, 3, 4, 1]  # layers of each block
 EfficientNetB0_kernel = [3, 3, 5, 3, 5, 5, 3]  # kernel size
 se_ratio = 1 / 16
 
-alpha = 1.2  # depth multiplier (channel)
+alpha = 1.2  # depth multiplier (layers in each block)
 beta = 1.1  # width multiplier (filter)
 gamma = 1.15  # resolution multiplier (input size)
 
@@ -22,7 +22,7 @@ phi_values = {
     5: 456,
     6: 528,
     7: 600,
-}  # input size of each model
+}  # resolution scaling
 
 
 strides = [
@@ -79,6 +79,8 @@ class EfficientNet:
         x = tf.keras.layers.Conv2D(
             filters=32, kernel_size=3, strides=2, padding="same"
         )(inputs)
+        x = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.Activation("swish")(x)
 
         top = tf.keras.Model(inputs=inputs, outputs=x, name="top")
 
@@ -92,6 +94,8 @@ class EfficientNet:
         x = tf.keras.layers.Conv2D(
             filters=1280, kernel_size=1, strides=1, padding="same"
         )(x)
+        x = tf.keras.layers.BatchNormalization()(x)
+        x = tf.keras.layers.Activation("swish")(x)
 
         x = tf.keras.layers.GlobalAveragePooling2D()(x)
 
@@ -105,7 +109,7 @@ class EfficientNet:
 
         return x
 
-    def __repeat_build_block(
+    def __build_repeat_block(
         self,
         inputs,
         filters,
@@ -154,21 +158,23 @@ class EfficientNet:
 
         return x
 
-    def __filters(self, filters, phi):
-
-        multiplier = alpha ** phi
-
-        filters_ = EfficientNetB0_filters
-
-        return [int(multiplier * i) for i in filters_]
-
     def __layers(self, phi):
         
-        multiplier = beta ** phi
+        multiplier = alpha ** phi
 
         layers_ = EfficientNetB0_layers
 
         return [int(multiplier * i) for i in layers_]
+    
+    
+    def __filters(self, phi):
+
+        multiplier = beta ** phi
+
+        filters_ = EfficientNetB0_filters
+
+        return [int(multiplier * i) for i in filters_]
+    
 
     def __resolution(self, phi):
 
@@ -180,7 +186,7 @@ class EfficientNet:
 
         x = inputs
 
-        filters_ = self.__filters(EfficientNetB0_filters, phi)
+        filters_ = self.__filters(phi)
 
         layers_ = self.__layers(phi)
 
@@ -194,7 +200,7 @@ class EfficientNet:
         x = self.__build_top(x)
 
         for i in range(len(filters_)):
-            x = self.__repeat_build_block(
+            x = self.__build_repeat_block(
                 x,
                 filters_[i],
                 EfficientNetB0_kernel[i],
